@@ -1,0 +1,108 @@
+---
+title: "Introduction to linear models with R"
+output:
+  pdf_document:
+    highlight: default
+    toc: no
+  word_document: default
+  html_document:
+    theme: default
+    toc: yes
+---
+
+# Graphics
+Simple plots in R are easy to create.
+```{r}
+data(iris)
+plot(iris$Sepal.Length, iris$Petal.Length)
+```
+
+as are histograms.
+
+```{r, eval=FALSE}
+hist(iris$Sepal.Length)
+```
+
+
+The ggplot2 package is a way of easily creating beautiful plots, and which makes it easy to add colour and regression lines.
+
+```{r, fig.width = 7, fig.height = 2.7}
+library(ggplot2)
+qplot(x=Sepal.Length, y=Petal.Length, data=iris, colour=Species, shape=Species)
+qplot(x=Sepal.Length, y=Petal.Length, data=iris, colour=Species, shape=Species,
+      geom=c('point')) + stat_smooth(method="lm")
+```
+```{r, fig.width = 5, fig.height = 2.5}
+qplot(x=Species, y=Sepal.Length, data=iris, geom="boxplot")
+```
+
+
+
+# More on linear model syntax
+
+
+**lm** is the key function used to fit models. Its usage is illustrated in the 9  case studies.
+
+To fit a linear model using R, it is first necessary to understand the syntax for
+defining models. Let’s assume that the response variable being modeled is Y and that
+A, B and C are covariates that might affect Y. The table below
+provides some useful examples. Note that the mathematical symbols used to define
+models do not have their normal meanings!
+
+\begin{tabular}{|l|l|}
+\hline
+       Syntax &                    Model\\                              
+\hline
+$Y\sim A     $               &   $Y = \beta_o + \beta_1 A$\\
+$Y \sim -1 + A$ &                     $Y = \beta_1 A$\\
+$Y\sim A+A^2$ &   	 	          $Y = \beta_o+ \beta_1( A + A^2)$\\
+$Y \sim A + I(A^2)$ &                     $Y = \beta_o+ \beta_1 A + \beta_2 A^2$\\
+$Y\sim A+B$  &                     $Y = \beta_o+ \beta_1 A + \beta_2 B$\\
+$Y \sim A:B$  &                     $Y = \beta_o + \beta_1 AB$\\
+$Y \sim A*B$ &                      $Y = \beta_o+ \beta_1 A + \beta_2 B + \beta_3 AB$\\
+$Y \sim (A + B + C)^2$ &                      $Y = \beta_o+ \beta_1 A + \beta_2 B + \beta_3 C +      \beta_4AB + \beta_5AC + \beta_6 BC$
+\\
+\hline
+\end{tabular}
+
+Notice the difference between the third and fourth lines of the table. The function  I() is used to seperate terms, so that we get $A$ and $A^2$ included as independent variables in the regression. 
+
+You can also include transformations. For example
+```{r, eval=FALSE}
+lm(log(Y)~ A + B^2+exp(C))
+```
+fits the model
+$$\log(Y) = \beta_0 + \beta_1 A +\beta_2 B^2  + \beta_3 \exp(C) + \epsilon$$
+
+# Trying things for yourself
+
+You should now try your own analysis, experimenting with fitting different linear models: 
+
+**Exercise 1**
+
+- Load the hills dataset from the MASS library with the command
+```{r}
+library(MASS)
+data(hills)
+?hills  ### Use ? to consult the help files for a command or object.
+```
+- Perform some initial exploratory data analysis by producing scatter plots of each of the pairs of variables.
+- Fit a linear model to predict the winning race time from the distance and the total amount of climbing.
+- What are the estimated coefficients?
+- What are the error estimates (standard errors) on these estimates?
+- What is the deviance of the model?
+- What is the $R^2$ and adjusted $R^2$ value?
+- Use visreg to visualise the fitted model (look at Case Study 4 first).
+- Fit the model
+$$time = a + b\times dist + c\times dist^2+\epsilon.$$ 
+- What are the estimated coefficients for this model? Is the additional term required, on the basis of the adjusted $R^2$ value??
+
+
+
+
+
+
+
+
+
+
